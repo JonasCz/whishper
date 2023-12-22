@@ -7,50 +7,18 @@
 
 	let errorMessage = '';
 	let disableSubmit = true;
-	let modelSize = 'small';
-	let language = 'auto';
+	let modelSize = 'large-v3';
+	let language = 'en';
 	let sourceUrl = '';
 	let fileInput;
 	let device = env.PUBLIC_WHISHPER_PROFILE == 'gpu' ? 'cuda' : 'cpu';
 
 	let languages = [
-		'auto',
-		'ar',
-		'be',
-		'bg',
-		'bn',
-		'ca',
-		'cs',
-		'cy',
-		'da',
-		'de',
-		'el',
 		'en',
-		'es',
 		'fr',
-		'it',
-		'ja',
-		'nl',
-		'pl',
-		'pt',
-		'ru',
-		'sk',
-		'sl',
-		'sv',
-		'tk',
-		'tr',
-		'zh'
+		'vi',
 	];
 	let models = [
-		'tiny',
-		'tiny.en',
-		'base',
-		'base.en',
-		'small',
-		'small.en',
-		'medium',
-		'medium.en',
-		'large-v2',
 		'large-v3'
 	];
 	// Sort the languages
@@ -216,7 +184,7 @@
 				<select name="device" bind:value={device} class="select select-bordered">
 					{#if env.PUBLIC_WHISHPER_PROFILE == 'gpu'}
 						<option selected value="cuda">GPU</option>
-						<option value="cpu">CPU</option>
+						<option disabled value="cpu">CPU</option>
 					{:else}
 						<option selected value="cpu">CPU</option>
 						<option disabled value="cuda">GPU</option>
