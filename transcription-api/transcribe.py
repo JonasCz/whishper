@@ -1,4 +1,4 @@
-from backends.fasterwhisper import FasterWhisperBackend
+from backends.whisperx import WhisperxBackend
 from backends.backend import Transcription
 from faster_whisper import decode_audio
 from models import DeviceType
@@ -19,6 +19,14 @@ async def transcribe_from_filename(filename: str,
     if not os.path.exists(filepath):
         raise RuntimeError(f"file not found in {filepath}")
     audio = convert_audio(filepath)
+    return await transcribe_audio(audio, model_size, language, device)
+
+async def transcribe_from_url(url: str,
+                                    model_size: int,
+                                    language: Optional[str] = None,
+                                    device: DeviceType = DeviceType.cpu) -> Transcription:
+    
+    audio = convert_audio(url)
     return await transcribe_audio(audio, model_size, language, device)
 
 async def transcribe_file(file: io.BytesIO, 
@@ -49,7 +57,7 @@ async def transcribe_audio(audio: np.ndarray,
         language = None
 
     # Load the model
-    model = FasterWhisperBackend(model_size=model_size, device=device)
+    model = WhisperxBackend(model_size=model_size, device=device)
     model.get_model()
     model.load()
     # Transcribe the file
