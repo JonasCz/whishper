@@ -34,21 +34,43 @@ ENV BODY_SIZE_LIMIT=0
 RUN pnpm run build
 
 # Base container
-FROM python:3.11-slim as base
+FROM anibali/pytorch:2.0.1-cuda11.8 as base
+USER root
+
+ENV PYTHON_VERSION=3.10
 
 RUN export DEBIAN_FRONTEND=noninteractive \
     && apt-get -qq update \
     && apt-get -qq install --no-install-recommends \
-    ffmpeg curl nodejs nginx supervisor \
+    python${PYTHON_VERSION} \
+    python${PYTHON_VERSION}-venv \
+    python3-pip \
+    ffmpeg \
+    curl wget xz-utils \
+    ffmpeg nginx supervisor git wget \
+    && wget --quiet --show-progress https://github.com/Run-Pod/runpodctl/releases/download/v1.10.0/runpodctl-linux-amd -O runpodctl && chmod +x runpodctl && sudo cp runpodctl /usr/bin/runpodctl \
     && rm -rf /var/lib/apt/lists/*
+
+#Runpod setup
+COPY ./.runpod.yaml /home/user/.runpod.yaml
+
+RUN ln -s -f /usr/bin/python${PYTHON_VERSION} /usr/bin/python3 && \
+    ln -s -f /usr/bin/python${PYTHON_VERSION} /usr/bin/python && \
+    ln -s -f /usr/bin/pip3 /usr/bin/pip
 
 # Python service setup
 COPY ./transcription-api /app/transcription
 WORKDIR /app/transcription
-RUN pip3 install -r requirements.txt
-RUN pip3 install python-multipart
-
+RUN pip install --no-cache-dir -r requirements.txt && \
+    pip install --no-cache-dir python-multipart
+ 
 # Node.js service setup
+RUN wget https://nodejs.org/dist/v20.9.0/node-v20.9.0-linux-x64.tar.xz && \
+    tar -xf node-v20.9.0-linux-x64.tar.xz && \
+    mv node-v20.9.0-linux-x64 /usr/local/lib/node && \
+    rm node-v20.9.0-linux-x64.tar.xz
+ENV PATH="/usr/local/lib/node/bin:${PATH}"
+
 ENV BODY_SIZE_LIMIT=0
 COPY ./frontend /app/frontend
 COPY --from=frontend-build /app/build /app/frontend
@@ -61,6 +83,7 @@ COPY --from=ytdlp_cache /usr/local/bin/yt-dlp /bin/yt-dlp
 
 # Nginx setup
 COPY ./nginx.conf /etc/nginx/nginx.conf
+COPY ./.htpasswd /etc/nginx/.htpasswd
 
 # Set workdir and entrypoint
 WORKDIR /app
