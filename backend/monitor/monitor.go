@@ -1,12 +1,6 @@
 package monitor
 
 import (
-	"bytes"
-	"io"
-	"mime/multipart"
-	"os"
-	"path/filepath"
-
 	"github.com/rs/zerolog/log"
 
 	"codeberg.org/pluja/whishper/api"
@@ -65,15 +59,8 @@ func transcribe(s *api.Server, t *models.Transcription) error {
 		s.BroadcastTranscription(t)
 	}
 
-	// Prepare multipart form data
-	body, writer, err := prepareMultipartFormData(t)
-	if err != nil {
-		log.Error().Err(err).Msg("Error preparing multipart form data")
-		return err
-	}
-
 	// Send transcription request to transcription service
-	res, err := utils.SendTranscriptionRequest(t, body, writer)
+	res, err := utils.SendTranscriptionRequest(t)
 	if err != nil {
 		log.Error().Err(err).Msg("Error sending transcription request")
 		return err
@@ -89,38 +76,4 @@ func transcribe(s *api.Server, t *models.Transcription) error {
 	}
 	s.BroadcastTranscription(t)
 	return nil
-}
-
-func prepareMultipartFormData(t *models.Transcription) (*bytes.Buffer, *multipart.Writer, error) {
-	body := &bytes.Buffer{}
-	writer := multipart.NewWriter(body)
-
-	part, err := writer.CreateFormFile("file", t.FileName)
-	if err != nil {
-		log.Error().Err(err).Msg("Error creating form file")
-		return nil, nil, err
-	}
-
-	// Read file from disk
-	filePath := filepath.Join(os.Getenv("UPLOAD_DIR"), t.FileName)
-	file, err := os.Open(filePath)
-	if err != nil {
-		log.Error().Err(err).Msg("Error opening file")
-		return nil, nil, err
-	}
-	defer file.Close()
-
-	_, err = io.Copy(part, file)
-	if err != nil {
-		log.Error().Err(err).Msg("Error copying file")
-		return nil, nil, err
-	}
-
-	err = writer.Close()
-	if err != nil {
-		log.Error().Err(err).Msg("Error closing writer")
-		return nil, nil, err
-	}
-
-	return body, writer, nil
 }
