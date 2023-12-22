@@ -19,6 +19,7 @@ class ModelSize(str, Enum):
 
 class Languages(str, Enum):
     auto = "auto"
+    vi = "vi"
     ar = "ar"
     be = "be"
     bg = "bg"
