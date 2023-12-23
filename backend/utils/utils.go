@@ -88,7 +88,65 @@ func StopPodAndSleep() {
     time.Sleep(25 * time.Second)
 }
 
+
+type RequestBody struct {
+    Query string `json:"query"`
+}
+
+type ResponseBody struct {
+    Data struct {
+        Pod struct {
+            Machine struct {
+                GpuAvailable int `json:"gpuAvailable"`
+            } `json:"machine"`
+        } `json:"pod"`
+    } `json:"data"`
+}
+
 func SendTranscriptionRequest(t *models.Transcription) (*models.WhisperResult, error) {
+	check_url := "https://api.runpod.io/graphql?api_key=" + os.Getenv("RUNPOD_API_KEY")
+	log.Debug().Msgf("Checking if GPU is available at: %v", check_url)
+    requestBody := &RequestBody{
+        Query: `query Pod { pod(input: {podId: "dorrfi4dzlxcgb"}) { machine { gpuAvailable } } }`,
+    }
+
+    for {
+        body, _ := json.Marshal(requestBody)
+        req, err := http.NewRequest("POST", check_url, bytes.NewBuffer(body))
+        if err != nil {
+            time.Sleep(10 * time.Second)
+            continue
+        }
+        req.Header.Set("Content-Type", "application/json")
+        
+        client := &http.Client{}
+        resp, err := client.Do(req)
+        if err != nil || resp.StatusCode != http.StatusOK {
+            time.Sleep(10 * time.Second)
+            continue
+        }
+
+        defer resp.Body.Close()
+
+        respBody := new(ResponseBody)
+        err = json.NewDecoder(resp.Body).Decode(respBody)
+        if err != nil {
+            time.Sleep(10 * time.Second)
+            continue
+        }
+
+		log.Debug().Msgf("GPU available: %v", respBody.Data.Pod.Machine.GpuAvailable)
+        
+        if respBody.Data.Pod.Machine.GpuAvailable > 0 {
+			log.Debug().Msg("GPU available, continuing...")
+            // continue the function
+            break
+        }
+
+		log.Debug().Msg("No GPU available, sleeping for 10 seconds...")
+        time.Sleep(10 * time.Second)
+    }
+
 	//add file URL, at env(WHISHPER_HOST)/api/vido/ + filename
 	uploaded_file_url := os.Getenv("WHISHPER_HOST") + "/api/video/" + t.FileName
 	urlencoded_uploaded_file_url := url.QueryEscape(uploaded_file_url)
