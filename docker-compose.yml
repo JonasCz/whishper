@@ -60,6 +60,7 @@ services:
     environment:
       LT_DISABLE_WEB_UI: True
       LT_UPDATE_MODELS: True
+#      LT_DEBUG: True
     expose:
       - 5000
     networks:
@@ -68,8 +69,8 @@ services:
           - translate
     healthcheck:
       test: ['CMD-SHELL', './venv/bin/python scripts/healthcheck.py']
-      interval: 2s
-      timeout: 3s
+      interval: 30s
+      timeout: 5s
       retries: 5
 
   whishper:
