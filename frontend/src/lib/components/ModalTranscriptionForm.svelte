@@ -14,19 +14,47 @@
 	let device = env.PUBLIC_WHISHPER_PROFILE == 'gpu' ? 'cuda' : 'cpu';
 
 	let languages = [
-		'en',
-		'fr',
-		'vi',
+		{ code: 'en', name: 'English' },
+		{ code: 'fr', name: 'French' },
+		{ code: 'vi', name: 'Vietnamese' },
+		{ code: 'ar', name: 'Arabic' },
+		{ code: 'ca', name: 'Catalan' },
+		{ code: 'cs', name: 'Czech' },
+		{ code: 'da', name: 'Danish' },
+		{ code: 'de', name: 'German' },
+		{ code: 'el', name: 'Greek' },
+		{ code: 'es', name: 'Spanish' },
+		{ code: 'fa', name: 'Persian' },
+		{ code: 'fi', name: 'Finnish' },
+		{ code: 'he', name: 'Hebrew' },
+		{ code: 'hi', name: 'Hindi' },
+		{ code: 'hu', name: 'Hungarian' },
+		{ code: 'it', name: 'Italian' },
+		{ code: 'ja', name: 'Japanese' },
+		{ code: 'ko', name: 'Korean' },
+		{ code: 'ml', name: 'Malayalam' },
+		{ code: 'nl', name: 'Dutch' },
+		{ code: 'nn', name: 'Nynorsk' },
+		{ code: 'no', name: 'Norwegian' },
+		{ code: 'pl', name: 'Polish' },
+		{ code: 'pt', name: 'Portuguese' },
+		{ code: 'ru', name: 'Russian' },
+		{ code: 'te', name: 'Telugu' },
+		{ code: 'tr', name: 'Turkish' },
+		{ code: 'uk', name: 'Ukrainian' },
+		{ code: 'ur', name: 'Urdu' },
+		{ code: 'zh', name: 'Chinese' },
 	];
+
 	let models = [
 		'large-v3'
 	];
 	// Sort the languages
-	languages.sort((a, b) => {
-		if (a == 'auto') return -1;
-		if (b == 'auto') return 1;
-		return a.localeCompare(b);
-	});
+	//languages.sort((a, b) => {
+	//	if (a == 'auto') return -1;
+	//	if (b == 'auto') return 1;
+	//	return a.localeCompare(b);
+	//});
 
 	// Function that sends the data as a form to the backend
 	async function sendForm() {
@@ -172,7 +200,7 @@
 				</label>
 				<select name="language" bind:value={language} class="select select-bordered">
 					{#each languages as l}
-						<option value={l}>{l}</option>
+						<option value={l.code}>{l.name}</option>
 					{/each}
 				</select>
 			</div>
