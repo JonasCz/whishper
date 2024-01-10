@@ -12,3 +12,4 @@ whisper_models/
 *.beta.yml
 venv
 .runpod.yaml
+transcription-api/backends/parallelization.py
