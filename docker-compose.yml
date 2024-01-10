@@ -107,3 +107,4 @@ services:
 #          - driver: nvidia
 #            count: all
 #            capabilities: [gpu]
+      CPU_THREADS: 4
