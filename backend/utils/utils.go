@@ -106,9 +106,10 @@ type ResponseBody struct {
 func SendTranscriptionRequest(t *models.Transcription) (*models.WhisperResult, error) {
 	check_url := "https://api.runpod.io/graphql?api_key=" + os.Getenv("RUNPOD_API_KEY")
 	log.Debug().Msgf("Checking if GPU is available at: %v", check_url)
-    requestBody := &RequestBody{
-        Query: `query Pod { pod(input: {podId: "dorrfi4dzlxcgb"}) { machine { gpuAvailable } } }`,
-    }
+    podID := os.Getenv("POD_ID")
+	requestBody := &RequestBody{
+		Query: fmt.Sprintf(`query Pod { pod(input: {podId: "%s"}) { machine { gpuAvailable } } }`, podID),
+	}
 
     for {
         body, _ := json.Marshal(requestBody)
