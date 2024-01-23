@@ -16,6 +16,7 @@ class ModelSize(str, Enum):
     medium = "medium"
     large_v2 = "large-v2"
     large_v3 = "large-v3"
+    tnh_viet_v1 = "tnh-viet-v1"
 
 class Languages(str, Enum):
     auto = "auto"

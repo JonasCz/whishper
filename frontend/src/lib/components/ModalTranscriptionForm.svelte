@@ -48,8 +48,11 @@
 
 	let models = [
 		'large-v3',
-		'/volume/app/whisper-models/Whisper-v3-large-vietnamese-14WER-ct2'
+		'tnh-viet-v1'
 	];
+
+	//'/volume/app/whisper-models/Whisper-v3-large-vietnamese-14WER-ct2'
+	
 	// Sort the languages
 	//languages.sort((a, b) => {
 	//	if (a == 'auto') return -1;
