@@ -37,6 +37,9 @@ class WhisperxBackend(Backend):
         print(f"Downloading model {self.model_size}...")
         local_model_path = os.path.join(os.environ["WHISPER_MODELS_DIR"], f"faster-whisper-{self.model_size}")
         local_model_cache = os.path.join(os.environ["WHISPER_MODELS_DIR"], f"faster-whisper-{self.model_size}", "cache")
+        if os.path.exists(local_model_path):
+            print("Model already exists...")
+            return
         # Check if directory exists
         if not os.path.exists(local_model_path):
             os.makedirs(local_model_path)
