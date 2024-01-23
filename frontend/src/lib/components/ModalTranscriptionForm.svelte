@@ -47,7 +47,7 @@
 	];
 
 	let models = [
-		'large-v3'
+		'large-v3',
 		'/volume/app/whisper-models/Whisper-v3-large-vietnamese-14WER-ct2'
 	];
 	// Sort the languages
