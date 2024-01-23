@@ -242,6 +242,9 @@ func SendTranscriptionRequest(t *models.Transcription) (*models.WhisperResult, e
 		status_body_string_without_quotes := strings.Trim(string(status_body), "\"")
 		if status_body_string_without_quotes == "completed" {
 			break
+		} else if status_body_string_without_quotes == "processing"{
+			log.Debug().Msgf("Response from %v, processing, continuing", status_poll_url)
+			continue
 		} else {
 			//524 response code = keep polling, it's working
 			if statusResp.StatusCode == 524 {
