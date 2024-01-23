@@ -8,23 +8,23 @@
     let targetLanguage = null;
 
     let availableLanguages = [];
-    const getAvailableLangs = () => {
-        const fetchLanguages = () => {
-            fetch(`${env.PUBLIC_TRANSLATION_API_HOST}/languages`)
-            .then(res => res.json())
-            .then(data => {
-                if (data) {
-                    availableLanguages = data;
-                    // Languages fetched successfully, stop trying
-                    clearInterval(fetchLanguagesInterval);
-                }
-            });
-        };
-
-        // Fetch languages repeatedly until successful
-        const fetchLanguagesInterval = setInterval(fetchLanguages, 5000);
-        fetchLanguages();
-    };
+//    const getAvailableLangs = () => {
+//        const fetchLanguages = () => {
+//            fetch(`${env.PUBLIC_TRANSLATION_API_HOST}/languages`)
+//            .then(res => res.json())
+//            .then(data => {
+//                if (data) {
+//                    availableLanguages = data;
+//                   // Languages fetched successfully, stop trying
+//                    clearInterval(fetchLanguagesInterval);
+//                }
+//            });
+//        };
+//
+//        // Fetch languages repeatedly until successful
+//        const fetchLanguagesInterval = setInterval(fetchLanguages, 5000);
+//        fetchLanguages();
+//    };
 
     const handleTranslate = (id) => {
         if(targetLanguage) {
