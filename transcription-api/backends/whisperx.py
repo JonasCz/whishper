@@ -51,7 +51,7 @@ class WhisperxBackend(Backend):
 
     
     # Splits a line based on commas or word gaps
-    def _split_lineIfNeeded(words, max_splits=12):
+    def _split_lineIfNeeded(words, max_splits=25):
         # If there are no words or we have no more splits left, return an empty list
         if not words or max_splits <= 0:
             return [{'words': words}]
@@ -150,14 +150,14 @@ class WhisperxBackend(Backend):
             
             if word['word'].endswith(('.', '?', '!')):  # Check for sentence-ending punctuation
                 if len(line_buffer) > 12:
-                    srt_output.extend(WhisperxBackend._split_lineIfNeeded(words=line_buffer, max_splits=12))
+                    srt_output.extend(WhisperxBackend._split_lineIfNeeded(words=line_buffer, max_splits=25))
                 else:
                     srt_output.append({'words': line_buffer})
                 line_buffer = []
 
         # If there are words left in the buffer after the loop, treat as a line
         if line_buffer:
-            srt_output.extend(WhisperxBackend._split_lineIfNeeded(words=line_buffer, max_splits=3))
+            srt_output.extend(WhisperxBackend._split_lineIfNeeded(words=line_buffer, max_splits=25))
 
         result_segments = []
 
