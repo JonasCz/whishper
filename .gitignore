@@ -13,3 +13,4 @@ whisper_models/
 venv
 .runpod.yaml
 transcription-api/backends/parallelization.py
+.htpasswd
