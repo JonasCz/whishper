@@ -92,6 +92,8 @@ RUN mkdir /app/uploads
 # Cleanup to make the image smaller
 RUN apt-get clean && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/* /usr/share/doc/* ~/.cache /var/cache
 
+RUN mkdir -p /var/log/whishper/
+
 COPY ./supervisord.conf /etc/supervisor/conf.d/supervisord.conf
 ENTRYPOINT ["supervisord", "-c", "/etc/supervisor/conf.d/supervisord.conf"]
 
